@@ -1,0 +1,12 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  db:
+    build:
+        context: .
+        dockerfile: dbdockerfile
+    container_name: file_system_db
+    ports:
+      - "1500:1433" 
+    environment:
+      - ACCEPT_EULA=y
+      - MSSQL_SA_PASSWORD=>Lf5=!yP=yY(8-Re

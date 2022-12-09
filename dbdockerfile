@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/mssql/server:2019-latest
+USER root
+ENV ACCEPT_EULA=Y
+ENV MSSQL_SA_PASSWORD='>Lf5=!yP=yY(8-Re'
+COPY FileSystemMock.bak /var/backups/
+COPY attach_bak_script.sh /var/opt/sqlserver/
+
+RUN \
+echo "Environment variables set." \
+&& echo "Starting SqlServr" \
+&& /opt/mssql/bin/sqlservr & sleep 60 | echo "Waiting for 60s to start Sql Server" \
+&& /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '>Lf5=!yP=yY(8-Re' -Q "RESTORE DATABASE FileSystemMock FROM DISK = N'/var/backups/FileSystemMock.bak' \
+WITH MOVE 'FileSystemMock' TO '/var/opt/mssql/data/FileSystemMock.mdf', \
+MOVE 'FileSystemMock_log' TO '/var/opt/mssql/log/FileSystemMock_log.ldf' \
+EXEC sp_detach_db @dbname = N'FileSystemMock'" \
+&& rm -f /var/opt/mssql/log/FileSystemMock_log.ldf
+
+ENTRYPOINT /var/opt/sqlserver/attach_bak_script.sh & /opt/mssql/bin/sqlservr
