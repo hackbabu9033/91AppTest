@@ -15,4 +15,6 @@ MOVE 'FileSystemMock_log' TO '/var/opt/mssql/log/FileSystemMock_log.ldf' \
 EXEC sp_detach_db @dbname = N'FileSystemMock'" \
 && rm -f /var/opt/mssql/log/FileSystemMock_log.ldf
 
+RUN chmod +x /var/opt/sqlserver/attach_bak_script.sh
+
 ENTRYPOINT /var/opt/sqlserver/attach_bak_script.sh & /opt/mssql/bin/sqlservr
