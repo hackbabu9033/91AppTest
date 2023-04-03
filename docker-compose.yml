@@ -6,7 +6,22 @@ services:
         dockerfile: dbdockerfile
     container_name: file_system_db
     ports:
-      - "1500:1433" 
+      - "1433:1433" 
     environment:
       - ACCEPT_EULA=y
       - MSSQL_SA_PASSWORD=>Lf5=!yP=yY(8-Re
+  app:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    depends_on:
+      - db
+    container_name: file_system_app
+    ports:
+      - "50000:50000"
+    #這個console app 是以entrypoint進入cli，維持與外部的交互來確保容器不會exit   
+    tty: true
+  
+  
+  
+  
